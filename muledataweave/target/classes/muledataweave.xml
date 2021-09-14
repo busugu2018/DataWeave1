@@ -40,4 +40,45 @@ users: ["john", "peter", "matt"] map ((firstName, position) -> position ++ ":" +
 users: ['Jo', 'Ken'] map ((firstname, position) -> position ++ ":" ++ upper firstname)]]></dw:set-payload>
 		</dw:transform-message>
 	</flow>
+	<flow name="toLower1Flow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/toLower1" allowedMethods="GET" doc:name="HTTP"/>
+		<dw:transform-message doc:name="Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+name: ["Jo", "John"] map lower $]]></dw:set-payload>
+		</dw:transform-message>
+	</flow>
+	<flow name="arraySizeOf1Flow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/sizeOf1" allowedMethods="GET" doc:name="HTTP"/>
+		<dw:transform-message doc:name="Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+arraySize: sizeOf ["Jo", "John", "Matt", "Josh", "Allen", "Speed"]]]></dw:set-payload>
+		</dw:transform-message>
+	</flow>
+	<flow name="arrayPushFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/arrayPush" allowedMethods="GET" doc:name="Copy_of_HTTP"/>
+		<dw:transform-message doc:name="Copy_of_Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	arraySize: sizeOf ["Jo", "John", "Matt", "Josh", "Allen", "Speed"],
+	arrayPush: [0, 1, 2]+5
+}]]></dw:set-payload>
+		</dw:transform-message>
+	</flow>
+	<flow name="textSizeFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/textSize" allowedMethods="GET" doc:name="HTTP"/>
+		<dw:transform-message doc:name="Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	textSize: sizeOf "Mulesoft"
+}]]></dw:set-payload>
+		</dw:transform-message>
+	</flow>
 </mule>
