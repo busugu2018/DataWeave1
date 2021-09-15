@@ -81,4 +81,77 @@ arraySize: sizeOf ["Jo", "John", "Matt", "Josh", "Allen", "Speed"]]]></dw:set-pa
 }]]></dw:set-payload>
 		</dw:transform-message>
 	</flow>
+	<flow name="flattenFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/flatten" allowedMethods="GET" doc:name="HTTP"/>
+		<dw:transform-message doc:name="Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+flatten [
+	[1,2],
+	[94,5],
+	[69,94],
+	[827,0.009983,2]
+]]]></dw:set-payload>
+		</dw:transform-message>
+	</flow>
+	<flow name="filterFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/filter" allowedMethods="GET" doc:name="HTTP"/>
+		<dw:transform-message doc:name="Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	biggerThanTwo: [0, 1, 2, 3, 4, 5]  filter $>2
+}]]></dw:set-payload>
+		</dw:transform-message>
+	</flow>
+	<flow name="removeFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/remove" allowedMethods="GET" doc:name="HTTP"/>
+		<dw:transform-message doc:name="Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	aa: ["a","b","c","d","e","f"] - 4
+}]]></dw:set-payload>
+		</dw:transform-message>
+	</flow>
+	<flow name="removeObjectFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/remove1" allowedMethods="GET" doc:name="Copy_of_HTTP"/>
+		<dw:transform-message doc:name="Copy_of_Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	myObject: {aa: "a", bb: "b",cc: "c",dd: "d"} - "bb",
+	sizeOf: sizeOf ({aa: "a", bb: "b",cc: "c",dd: "d"} - "bb")
+}
+]]></dw:set-payload>
+		</dw:transform-message>
+	</flow>
+	<flow name="removeMatchingKeysObjectFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/remove2" allowedMethods="GET" doc:name="Copy_of_Copy_of_HTTP"/>
+		<dw:transform-message doc:name="Copy_of_Copy_of_Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	myObject: {aa: "a", bb: "b",cc: "c",dd: "d"} -- {aa:"a", cc:"cc"}
+}
+]]></dw:set-payload>
+		</dw:transform-message>
+	</flow>
+	<flow name="removeMatchingKeysObject1Flow">
+		<http:listener config-ref="HTTP_Listener_Configuration" path="/remove3" allowedMethods="GET" doc:name="Copy_of_Copy_of_Copy_of_HTTP"/>
+		<dw:transform-message doc:name="Copy_of_Copy_of_Copy_of_Transform Message">
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	myObject: {aa: "a", bb: "b",cc: "c",dd: "d"} -- {aa:"a"}
+}
+]]></dw:set-payload>
+		</dw:transform-message>
+	</flow>
 </mule>
